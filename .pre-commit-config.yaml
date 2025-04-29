@@ -1,0 +1,39 @@
+repos:
+  - repo: local
+    hooks:
+      - id: check-added-large-files
+        name: Check for added large files
+        entry: check-added-large-files
+        language: system
+      - id: trailing-whitespace
+        name: Trim Trailing Whitespace
+        entry: trailing-whitespace-fixer
+        language: system
+        types: [text]
+        stages: [commit, push, manual]
+        args: [--markdown-linebreak-ext=md]
+      - id: check-toml
+        name: Check Toml
+        entry: check-toml
+        language: system
+        types: [toml]
+      - id: check-yaml
+        name: Check Yaml
+        entry: check-yaml
+        language: system
+        types: [yaml]
+      - id: check-xml
+        name: Check xml
+        entry: check-xml
+        language: system
+        types: [xml]
+      - id: no-commit-to-branch
+        name: Prevent commits to dev / master
+        entry: no-commit-to-branch
+        language: python
+        args: ["-b", dev, "-b", main]
+        pass_filenames: false
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.18.0  # Specify the desired version of Gitleaks
+    hooks:
+      - id: gitleaks
