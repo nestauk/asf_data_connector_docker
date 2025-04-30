@@ -25,9 +25,13 @@ Ultimately, the Hive metastore is what allows us to query and interact with the 
 ### Trino
 Trino is a query engine that can connect to different data sources and query data in lots of formats. It is not itself a database though, instead it relies on connecting to a catalog like the Hive Metastore to access data. Trino can execute queries and return conventionally formatted tabular data via conventional database drivers like python's sqlalchemy, odbc and jdbc.
 
+Because we're primarily interested in smaller files, trino is set up as a single server that is both the coordinator and worker. There are no separate workers in this setup.
+
 ### Secrets
 
 At present, configuration files that enable trino and hive metastore to connect to S3 both rely on hard-coded, as this presents a risk gitleaks has been enabled as a precommit hook on this repo.
+
+To set up the connection you'll need to provide your AWS S3 access and secret keys to `/trino/etc/catalog/hive.properties` and `/hive_metastore/metastore-site.xml`.
 
 ## Testing the Data Connector
 

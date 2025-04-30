@@ -1,0 +1,36 @@
+name: dataconnector
+
+services:
+  db:
+    build:
+      context: db/
+      dockerfile: mariadb_metastore.Dockerfile
+    environment:
+      - MARIADB_ALLOW_EMPTY_ROOT_PASSWORD=1
+    networks:
+      - data_net
+    container_name: mariadb_metastore
+  hive_metastore:
+    build:
+      context: hive_metastore/
+      dockerfile: standalone_metastore.Dockerfile
+    networks:
+      data_net:
+        aliases:
+          - metastore.local
+    container_name: metastore
+    depends_on:
+      db:
+        condition: service_healthy
+  trino:
+    build:
+      context: trino/
+      dockerfile: trino.Dockerfile
+    networks:
+      - data_net
+    container_name: trino
+    depends_on:
+      hive_metastore:
+        condition: service_healthy
+networks:
+  data_net:
